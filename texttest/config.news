@@ -4,6 +4,8 @@ executable:${TEXTTEST_HOME}/texttest/fixture.py
 # Expanded name to use for application
 full_name:Newsletter Microservices
 
+config_module:newsletter_config
+
 home_operating_system:nt
 interpreter:${TEXTTEST_HOME}/venv/Scripts/python.exe
 

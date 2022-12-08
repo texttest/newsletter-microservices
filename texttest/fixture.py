@@ -23,42 +23,56 @@ def find_dependencies(source_fn):
                 dynamic_ports = True
     return dependencies, dynamic_ports
 
-def find_service_info(root):
+def find_service_info():
     info = []
-    for dirName in glob(os.path.join(root, "*", "src")):
-        serviceDir = os.path.dirname(dirName)
-        serviceName = os.path.basename(serviceDir)
-        sourceFile = os.path.join(dirName, serviceName + ".py")
-        if os.path.isfile(sourceFile):
-            dependencies, dynamic_ports = find_dependencies(sourceFile)
-            if dynamic_ports:
-                dbSchema = os.path.join(serviceDir, "schema.sql")
-                if not os.path.isfile(dbSchema):
-                    dbSchema = None 
-                info.append((serviceName, sourceFile, dependencies, dbSchema))
+    for varName, serviceDir in os.environ.items():
+        if varName.startswith("SVC_"):
+            serviceName = varName[4:].lower()        
+            sourceFile = os.path.join(serviceDir, "src", serviceName + ".py")
+            if os.path.isfile(sourceFile):
+                dependencies, dynamic_ports = find_dependencies(sourceFile)
+                if dynamic_ports:
+                    dbSchema = os.path.join(serviceDir, "schema.sql")
+                    if not os.path.isfile(dbSchema):
+                        dbSchema = None 
+                    info.append((serviceName, sourceFile, dependencies, dbSchema))
     info.sort(key=lambda info: len(info[2]))
     return info
 
-def start_capturemock(service, dep_var, testenv):
+def start_capturemock(service, dep_var, testenv, replayDir):
     manager = capturemock.CaptureMockManager()
     recordFile = service + "-" + dep_var.lower()[:-4] + "-mocks.news"
     recordFromUrl = testenv.get(dep_var)
+    if recordFromUrl:
+        mode = capturemock.RECORD 
+        replayFile = None
+    else:
+        mode = capturemock.REPLAY
+        replayFile = os.path.join(replayDir, recordFile)
     environment = os.environ.copy()
     rcFiles = os.getenv("TEXTTEST_CAPTUREMOCK_RCFILES").split(",")
-    manager.startServer(capturemock.RECORD, recordFile, rcFiles=rcFiles,
+    manager.startServer(mode, recordFile, replayFile=replayFile, rcFiles=rcFiles,
                         environment=environment, recordFromUrl=recordFromUrl)
     testenv[dep_var] = environment.get("CAPTUREMOCK_SERVER")
     return manager
 
+def replay_for_servers(replayDir, testenv):
+    for replayFile in glob(os.path.join(replayDir, "*mocks*")):
+        client, server, _ = os.path.basename(replayFile).split("-")
+        client_var = client.upper() + "_URL"
+        server_var = server.upper() + "_URL"
+        if server_var in testenv and client_var not in testenv:
+            capturemock.replay_for_server(replayFile=replayFile, recordFile=os.path.basename(replayFile),
+                                          serverAddress=testenv.get(server_var))
+
 def run_backend():
-    logging.basicConfig(level=logging.INFO)
-    
+    logging.basicConfig(level=logging.DEBUG, filename="fixture.log")
+    replayDir = os.path.dirname(os.getenv("TEXTTEST_CAPTUREMOCK_REPLAY"))
     testenv = os.environ.copy()
     testenv["DYNAMIC_PORTS"] = "1"
-    root = os.getenv("TEXTTEST_HOME")
     processes, cpmock_managers, databases = [], [], []
     try:
-        for service, source, dependencies, schema in find_service_info(root):
+        for service, source, dependencies, schema in find_service_info():
             if schema:
                 dbname = service + "db_" + str(os.getpid())
                 testenv[service.upper() + "_DB_NAME"] = dbname
@@ -66,24 +80,24 @@ def run_backend():
                 db.create(sqlfile=schema)
                 databases.append((service, db))
             for dep_var in dependencies:
-                cpmock = start_capturemock(service, dep_var, testenv)
+                cpmock = start_capturemock(service, dep_var, testenv, replayDir)
                 cpmock_managers.append(cpmock)
-            logging.info(f"for service {service}, dependencies are {dependencies}")
+            logging.debug(f"for service {service}, dependencies are {dependencies}")
             command = [ sys.executable, source ]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, 
-                                   env=testenv)
+                                       env=testenv)
             url = wait_for_url(process, "Running on")
-            logging.info(f"started {service} service on url {url}")
+            logging.debug(f"started {service} service on url {url}")
             testenv[service.upper() + "_URL"] = url
             processes.append(process)
 
-        capturemock.replay_for_server(serverAddress=testenv.get("NEWSLETTER_URL"))
+        replay_for_servers(replayDir, testenv)
         for service, db in databases:
             if "TEXTTEST_DB_SETUP" in os.environ:
                 db.dump_data_directory()
             db.dumpchanges(table_fn_pattern='db_' + service + '_{type}.news')
     finally:
-        logging.info("stopping all services")
+        logging.debug("stopping all services")
         for process in processes:
             process.terminate()
         for cpmock in cpmock_managers:
