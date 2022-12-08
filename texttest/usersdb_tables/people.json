@@ -1,0 +1,42 @@
+[
+  {
+    "description": "Species Plantarum",
+    "name": "Carl Linnaeus",
+    "title": "Prof."
+  },
+  {
+    "description": "On the origin of species",
+    "name": "Charles Darwin",
+    "title": "Dr."
+  },
+  {
+    "description": "The Social Behavior of the Bees",
+    "name": "Charles Duncan Michener",
+    "title": "Dr."
+  },
+  {
+    "description": "Bumblebees: Their Behaviour and Ecology",
+    "name": "Dave Goulson",
+    "title": "Prof."
+  },
+  {
+    "description": "The Bumble-Bee's Religion",
+    "name": "Emily Dickinson",
+    "title": "Ms."
+  },
+  {
+    "description": "The Dancing Bees: An Account of the Life and Senses of the Honey Bee",
+    "name": "Karl von Frisch",
+    "title": "Dr."
+  },
+  {
+    "description": "Flight of the Bumblebee",
+    "name": "Nikolai Rimsky-Korsakov",
+    "title": "Mr."
+  },
+  {
+    "description": "Pygmephorus lutterloughae",
+    "name": "Sophie Lutterlough",
+    "title": "Mrs."
+  }
+]

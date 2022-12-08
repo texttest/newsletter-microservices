@@ -1,0 +1,25 @@
+# Full path to the System Under Test (or Java Main Class name)
+executable:${TEXTTEST_HOME}/texttest/fixture.py
+
+# Expanded name to use for application
+full_name:Newsletter Microservices
+
+home_operating_system:nt
+interpreter:${TEXTTEST_HOME}/venv/Scripts/python.exe
+
+# Naming scheme to use for files for stdin,stdout and stderr
+filename_convention_scheme:standard
+
+discard_file:stdout
+
+dbtext_database_path:usersdb_tables
+
+import_config_file:capturemock_config
+
+capturemock_clientserver_mock_name:client-newsletter-mocks
+
+[definition_file_stems]
+regenerate:*mocks
+
+[run_dependent_text]
+stderr:service on url{WORD -1}

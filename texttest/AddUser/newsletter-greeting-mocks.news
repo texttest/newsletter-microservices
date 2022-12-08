@@ -1,0 +1,4 @@
+<-CLI:GET /formatGreeting?name=Geoff
+--HEA:Accept=*/*
+->SRV:200 Hello, Geoff!
+--HEA:Content-Type=text/html; charset=utf-8

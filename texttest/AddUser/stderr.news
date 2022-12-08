@@ -1,0 +1,8 @@
+INFO:root:for service greeting, dependencies are []
+INFO:root:started greeting service on url http://127.0.0.1:52531
+INFO:root:for service users, dependencies are []
+INFO:root:started users service on url http://127.0.0.1:52543
+INFO:root:for service newsletter, dependencies are ['USERS_URL', 'GREETING_URL']
+INFO:root:started newsletter service on url http://127.0.0.1:52559
+INFO:dbtext:will dump changes compared with tables_dir usersdb_tables
+INFO:root:stopping all services

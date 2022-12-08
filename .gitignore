@@ -1,0 +1,7 @@
+.idea
+**/__pycache__
+**/*.pyc
+texttest/html2ascii
+venv
+.project
+.pydevproject
