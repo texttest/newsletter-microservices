@@ -61,7 +61,10 @@ class NewsletterTestComparison(comparetest.TestComparison):
         return services
                 
     def getServicesFromStem(self, stem):
-        if stem.startswith("db_"):
+        log_postfix = "_log"
+        if stem.endswith(log_postfix):
+            return [ stem[:-len(log_postfix)] ]
+        elif stem.startswith("db_"):
             return [ stem.split("_")[1].lower() ]
         elif stem.endswith("-mocks"):
             return stem.split("-")[1:3]

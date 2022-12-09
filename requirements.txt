@@ -1,7 +1,8 @@
 flask
+flask-restx
+Flask-Cors
 sqlalchemy
 PyMySQL
-Flask-Cors
 requests
 dbtext
 capturemock

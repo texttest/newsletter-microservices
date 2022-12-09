@@ -1,14 +1,7 @@
 import os, logging, sys, subprocess
-from dbtext import MySQL_DBText
+from dbtext import MySQL_DBText, PipeReaderThread
 import capturemock
 from glob import glob
-
-def wait_for_url(proc, ready_text):
-    ready_bytes = ready_text.encode()
-    for _ in range(20):
-        msg_bytes = proc.stdout.readline()
-        if ready_bytes in msg_bytes:
-            return msg_bytes.decode().strip().split()[-1]
 
 def find_dependencies(source_fn):
     dependencies = []
@@ -70,7 +63,7 @@ def run_backend():
     replayDir = os.path.dirname(os.getenv("TEXTTEST_CAPTUREMOCK_REPLAY"))
     testenv = os.environ.copy()
     testenv["DYNAMIC_PORTS"] = "1"
-    processes, cpmock_managers, databases = [], [], []
+    pipe_threads, cpmock_managers, databases = [], [], []
     try:
         for service, source, dependencies, schema in find_service_info():
             if schema:
@@ -86,10 +79,13 @@ def run_backend():
             command = [ sys.executable, source ]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, 
                                        env=testenv)
-            url = wait_for_url(process, "Running on")
+            pipeThread = PipeReaderThread(process, "Running on", filename=service + "_log.news")
+            pipeThread.start()
+            url_line = pipeThread.wait_for_text()
+            url = url_line.split()[-1]
             logging.debug(f"started {service} service on url {url}")
             testenv[service.upper() + "_URL"] = url
-            processes.append(process)
+            pipe_threads.append(pipeThread)
 
         replay_for_servers(replayDir, testenv)
         for service, db in databases:
@@ -98,8 +94,8 @@ def run_backend():
             db.dumpchanges(table_fn_pattern='db_' + service + '_{type}.news')
     finally:
         logging.debug("stopping all services")
-        for process in processes:
-            process.terminate()
+        for pipeThread in pipe_threads:
+            pipeThread.terminate()
         for cpmock in cpmock_managers:
             cpmock.terminate()
         for _, db in databases:

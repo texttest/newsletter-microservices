@@ -3,17 +3,19 @@ import os, json
 import requests
 from flask import Flask
 from flask_cors import CORS, cross_origin
+from flask_restx import Api, Resource
 
 app = Flask('newsletter')
 CORS(app)
+api = Api(app)
 
-
-@app.route("/sayHello/<name>")
-@cross_origin()
-def say_hello(name):
-    person = get_person(name)
-    resp = format_greeting(person)
-    return resp
+@api.route("/sayHello/<string:name>")
+class SayHello(Resource):
+    @cross_origin()
+    def get(self, name):
+        person = get_person(name)
+        resp = format_greeting(person)
+        return resp
 
 
 def get_person(name):
