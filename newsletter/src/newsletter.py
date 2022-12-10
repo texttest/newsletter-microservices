@@ -5,7 +5,7 @@ import requests
 from flask_cors import CORS, cross_origin
 from apiflask import APIFlask, abort
 
-app = APIFlask('newsletter')
+app = APIFlask('newsletter', title='Newsletter Service')
 CORS(app)
 cpmock_server = os.getenv("CAPTUREMOCK_SERVER")
 if cpmock_server:
