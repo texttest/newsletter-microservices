@@ -1,7 +1,20 @@
-import os, logging, sys, subprocess
+import os, logging, sys, subprocess, time
 from dbtext import MySQL_DBText, PipeReaderThread
 import capturemock
 from glob import glob
+import webbrowser
+from urllib.request import urlopen
+
+def wait_for_file(fn):
+    logging.debug(f"Waiting for file {fn} to appear")
+    for _ in range(600):
+        if os.path.isfile(fn) and os.path.getsize(fn) > 0:
+            time.sleep(1) # allow time for flush
+            return
+        else:
+            time.sleep(0.1)
+    print("Timed out waiting for action after 1 minute!", file=sys.stderr)
+
 
 def find_dependencies(source_fn):
     dependencies = []
@@ -32,11 +45,11 @@ def find_service_info():
     info.sort(key=lambda info: len(info[2]))
     return info
 
-def start_capturemock(service, dep_var, testenv, replayDir):
+def start_capturemock(client, server, dep_var, testenv, replayDir):
     manager = capturemock.CaptureMockManager()
-    recordFile = service + "-" + dep_var.lower()[:-4] + "-mocks.news"
+    recordFile = client + "-" + server + "-mocks.news"
     recordFromUrl = testenv.get(dep_var)
-    if recordFromUrl:
+    if recordFromUrl or not replayDir:
         mode = capturemock.RECORD 
         replayFile = None
     else:
@@ -47,7 +60,7 @@ def start_capturemock(service, dep_var, testenv, replayDir):
     manager.startServer(mode, recordFile, replayFile=replayFile, rcFiles=rcFiles,
                         environment=environment, recordFromUrl=recordFromUrl)
     testenv[dep_var] = environment.get("CAPTUREMOCK_SERVER")
-    return manager
+    return manager, recordFile
 
 def replay_for_servers(replayDir, testenv):
     for replayFile in glob(os.path.join(replayDir, "*mocks*")):
@@ -58,14 +71,22 @@ def replay_for_servers(replayDir, testenv):
             capturemock.replay_for_server(replayFile=replayFile, recordFile=os.path.basename(replayFile),
                                           serverAddress=testenv.get(server_var))
 
+def send_server_address(cpmock_url, server_url):
+    setUrl = cpmock_url + "/capturemock/setServerLocation"
+    urlopen(setUrl, data=server_url.encode()).read()
+
 def run_backend():
     logging.basicConfig(level=logging.DEBUG, filename="fixture.log")
-    replayDir = os.path.dirname(os.getenv("TEXTTEST_CAPTUREMOCK_REPLAY"))
+    replayFile = os.getenv("TEXTTEST_CAPTUREMOCK_REPLAY")
+    replayDir = os.path.dirname(replayFile) if replayFile else None
     testenv = os.environ.copy()
     testenv["DYNAMIC_PORTS"] = "1"
     pipe_threads, cpmock_managers, databases = [], [], []
+    record = capturemock.texttest_is_recording()
+    swagger_record_file, swagger_record_url = None, None
     try:
-        for service, source, dependencies, schema in find_service_info():
+        service_info = find_service_info()
+        for i, (service, source, dependencies, schema) in enumerate(service_info):
             if schema:
                 dbname = service + "db_" + str(os.getpid())
                 testenv[service.upper() + "_DB_NAME"] = dbname
@@ -73,9 +94,15 @@ def run_backend():
                 db.create(sqlfile=schema)
                 databases.append((service, db))
             for dep_var in dependencies:
-                cpmock = start_capturemock(service, dep_var, testenv, replayDir)
+                dep_svc = dep_var.lower()[:-4]
+                cpmock, _ = start_capturemock(service, dep_svc, dep_var, testenv, replayDir)
                 cpmock_managers.append(cpmock)
             logging.debug(f"for service {service}, dependencies are {dependencies}")
+            do_swagger_record = record and i == len(service_info) - 1
+            if do_swagger_record:
+                cpmock, swagger_record_file = start_capturemock("client", service, "CAPTUREMOCK_SERVER", testenv, replayDir)
+                logging.debug(f"starting record capturemock at {cpmock.serverAddress}")
+                cpmock_managers.append(cpmock)
             command = [ sys.executable, source ]
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, 
                                        env=testenv)
@@ -84,10 +111,17 @@ def run_backend():
             url_line = pipeThread.wait_for_text()
             url = url_line.split()[-1]
             logging.debug(f"started {service} service on url {url}")
+            if do_swagger_record:
+                send_server_address(cpmock_managers[-1].serverAddress, url)
+                swagger_record_url = url
             testenv[service.upper() + "_URL"] = url
             pipe_threads.append(pipeThread)
 
-        replay_for_servers(replayDir, testenv)
+        if record:
+            webbrowser.open_new(swagger_record_url + "/docs")
+            wait_for_file(swagger_record_file)
+        else:
+            replay_for_servers(replayDir, testenv)
         for service, db in databases:
             if "TEXTTEST_DB_SETUP" in os.environ:
                 db.dump_data_directory()

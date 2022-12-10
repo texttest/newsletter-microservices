@@ -1,0 +1,5 @@
+<-CLI:GET /getPerson/Insecticide
+--HEA:Accept=*/*
+->SRV:400 {"detail":{},"message":"Insecticides are not kind to bees."}
+
+--HEA:Content-Type=application/json

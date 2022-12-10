@@ -1,7 +1,7 @@
 
 import os, json
 from database import Person
-from apiflask import APIFlask
+from apiflask import APIFlask, abort
 
 app = APIFlask('users', title='Users Service')
 
@@ -10,7 +10,7 @@ def get_person_http(name):
     person = Person.get(name)
     if person is None:
         if name in ["Neonicotinoid", "Insecticide", "DDT"]:
-            raise Exception(f"{name}s are not kind to bees.")
+            abort(400, f"{name}s are not kind to bees.")
         person = Person()
         person.name = name
         person.save()
