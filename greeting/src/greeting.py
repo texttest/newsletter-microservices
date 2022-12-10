@@ -1,20 +1,23 @@
-from flask import Flask, request
+
 import os
 
-app = Flask('greeting')
+from apiflask import APIFlask, Schema
+from apiflask.fields import String
 
-@app.route("/formatGreeting")
-def handle_format_greeting():
-    name = request.args.get('name')
-    title = request.args.get('title')
-    descr = request.args.get('description')
-    return format_greeting(
-        name=name,
-        title=title,
-        description=descr,
-    )
+app = APIFlask('greeting', title='Greeting Service')
 
-def format_greeting(name, title, description):
+class PersonData(Schema):
+    name = String(required=True)
+    title = String()
+    description = String()
+
+@app.get("/formatGreeting")
+@app.input(PersonData, "query")
+def format_greeting(query):
+    name = query.get('name')
+    title = query.get('title')
+    description = query.get('description')
+        
     greeting = 'Hello'
     greeting += ', '
     if title:
@@ -25,5 +28,5 @@ def format_greeting(name, title, description):
     return greeting
 
 if __name__ == "__main__":
-    port = 0 if "DYNAMIC_PORTS" in os.environ else 3002
+    port = 0 if "DYNAMIC_PORTS" in os.environ else 5002
     app.run(port=port)

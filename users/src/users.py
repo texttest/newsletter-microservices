@@ -1,11 +1,11 @@
 
-import json, os
-from flask import Flask
+import os, json
 from database import Person
+from apiflask import APIFlask
 
-app = Flask('users')
+app = APIFlask('users', title='Users Service')
 
-@app.route("/getPerson/<name>")
+@app.get("/getPerson/<string:name>")
 def get_person_http(name):
     person = Person.get(name)
     if person is None:
@@ -23,7 +23,6 @@ def get_person_http(name):
     }
     return json.dumps(response)
 
-
 if __name__ == "__main__":
-    port = 0 if "DYNAMIC_PORTS" in os.environ else 3001
+    port = 0 if "DYNAMIC_PORTS" in os.environ else 5001
     app.run(port=port)

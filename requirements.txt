@@ -1,5 +1,5 @@
 flask
-flask-restx
+apiflask
 Flask-Cors
 sqlalchemy
 PyMySQL

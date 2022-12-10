@@ -1,6 +1,9 @@
- * Serving Flask app 'greeting'
+ * Serving Flask app 'greeting' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
  * Debug mode: off
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://127.0.0.1:50979
+ * Running on http://127.0.0.1:64663
 Press CTRL+C to quit
-127.0.0.1 - - [09/Dec/2022 11:17:08] "GET /formatGreeting?name=Charles+Darwin&title=Dr.&description=On+the+origin+of+species HTTP/1.1" 200 -
+127.0.0.1 - - [10/Dec/2022 14:25:50] "GET /formatGreeting?name=Charles+Darwin&title=Dr.&description=On+the+origin+of+species HTTP/1.1" 200 -
