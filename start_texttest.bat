@@ -4,6 +4,7 @@ if not exist "venv" (
     py -m venv venv
 )
 venv\Scripts\pip install -r requirements.txt
+py texttest\patch_apiflask_bug.py
 if %ERRORLEVEL% GEQ 1 (
     pause
 ) else (
