@@ -14,7 +14,7 @@ filename_convention_scheme:standard
 
 discard_file:stdout
 
-dbtext_database_path:usersdb_tables
+dbtext_database_path:mysqldata/users
 
 import_config_file:capturemock_config
 

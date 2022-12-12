@@ -88,7 +88,8 @@ def run_backend():
                 dbname = service + "db_" + str(os.getpid())
                 testenv[service.upper() + "_DB_NAME"] = dbname
                 db = MySQL_DBText(dbname)
-                db.create(sqlfile=schema)
+                data_dir = os.path.join("mysqldata", service)
+                db.create(sqlfile=schema, tables_dir=data_dir)
                 databases.append((service, db))
             for dep_var in dependencies:
                 dep_svc = dep_var.lower()[:-4]
@@ -121,9 +122,9 @@ def run_backend():
         else:
             replay_for_servers(replayDir, testenv)
         for service, db in databases:
+            db.dumpchanges(table_fn_pattern='db_' + service + '_{type}.news', tables_dir=os.path.join("mysqldata", service))
             if "TEXTTEST_DB_SETUP" in os.environ:
-                db.dump_data_directory()
-            db.dumpchanges(table_fn_pattern='db_' + service + '_{type}.news')
+                db.write_data("mysqldata", json_format=True)
     finally:
         logging.debug("stopping all services")
         for pipeThread in pipe_threads:
