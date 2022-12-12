@@ -3,7 +3,6 @@ from dbtext import MySQL_DBText, PipeReaderThread
 import capturemock
 from glob import glob
 import webbrowser
-from urllib.request import urlopen
 
 def wait_for_file(fn):
     logging.debug(f"Waiting for file {fn} to appear")
@@ -57,10 +56,12 @@ def start_capturemock(client, server, dep_var, testenv, replayDir):
         replayFile = os.path.join(replayDir, recordFile)
     environment = os.environ.copy()
     rcFiles = os.getenv("TEXTTEST_CAPTUREMOCK_RCFILES").split(",")
-    manager.startServer(mode, recordFile, replayFile=replayFile, rcFiles=rcFiles,
-                        environment=environment, recordFromUrl=recordFromUrl)
-    testenv[dep_var] = environment.get("CAPTUREMOCK_SERVER")
-    return manager, recordFile
+    if manager.startServer(mode, recordFile, replayFile=replayFile, rcFiles=rcFiles,
+                        environment=environment, recordFromUrl=recordFromUrl):
+        testenv[dep_var] = environment.get("CAPTUREMOCK_SERVER")
+        return manager, recordFile
+    else:
+        return None, None
 
 def replay_for_servers(replayDir, testenv):
     for replayFile in glob(os.path.join(replayDir, "*mocks*")):
@@ -70,10 +71,6 @@ def replay_for_servers(replayDir, testenv):
         if server_var in testenv and client_var not in testenv:
             capturemock.replay_for_server(replayFile=replayFile, recordFile=os.path.basename(replayFile),
                                           serverAddress=testenv.get(server_var))
-
-def send_server_address(cpmock_url, server_url):
-    setUrl = cpmock_url + "/capturemock/setServerLocation"
-    urlopen(setUrl, data=server_url.encode()).read()
 
 def run_backend():
     logging.basicConfig(level=logging.DEBUG, filename="fixture.log")
@@ -96,7 +93,8 @@ def run_backend():
             for dep_var in dependencies:
                 dep_svc = dep_var.lower()[:-4]
                 cpmock, _ = start_capturemock(service, dep_svc, dep_var, testenv, replayDir)
-                cpmock_managers.append(cpmock)
+                if cpmock:
+                    cpmock_managers.append(cpmock)
             logging.debug(f"for service {service}, dependencies are {dependencies}")
             do_swagger_record = record and i == len(service_info) - 1
             if do_swagger_record:
@@ -112,7 +110,7 @@ def run_backend():
             url = url_line.split()[-1]
             logging.debug(f"started {service} service on url {url}")
             if do_swagger_record:
-                send_server_address(cpmock_managers[-1].serverAddress, url)
+                cpmock_managers[-1].sendServerLocation(url)
                 swagger_record_url = url
             testenv[service.upper() + "_URL"] = url
             pipe_threads.append(pipeThread)

@@ -1,4 +1,4 @@
 [general]
 server_protocol = http
 record_for_client = true
-ignore_http_headers = ETag,X-Powered-By,Origin,Accept-Encoding,Accept-Language,Server,uber-trace-id
+ignore_http_headers = ETag,X-Powered-By,Origin,Accept-Encoding,Accept-Language,Server,uber-trace-id,Access-Control-Allow-Origin,Vary

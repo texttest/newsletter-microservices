@@ -2,4 +2,3 @@
 --HEA:accept=application/json
 ->SRV:200 Hello, Dr. Charles Darwin! On the origin of species is my favourite!
 --HEA:Content-Type=text/html; charset=utf-8
---HEA:Access-Control-Allow-Origin=*
