@@ -19,14 +19,17 @@ For each one, named $SERVICE_NAME, start them in a separate window like this.
 
 ## databases
 
-Install [MariaDB](https://mariadb.org/download). (The following instructions are for ec2 linux 2)
+* Install [MariaDB](https://mariadb.org/download). (The following instructions are for ec2 linux 2). Note - if you are prompted to give a password for the root database, leave it blank.
 
     sudo yum install mysql mariadb-server
     sudo systemctl start mariadb
 
-Create the databases using the script in the users service:
+* Install the [ODBC driver for MySQL](https://downloads.mysql.com/archives/c-odbc/)
+* Create the master database using a root connection
+    
+    MariaDB [(none)]> create database master;
 
-For each one:
+* Create the databases using the script in the users service:
 
     cd users
     mysql -u root < database.sql
