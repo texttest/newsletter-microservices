@@ -5,9 +5,9 @@ This application was created to showcase the capabilities of [TextTest](https://
 
 There are 3 python flask applications, named:
 
-- greeting
-- newsletter
-- users
+- Greeting
+- Newsletter
+- Users
 
 The functionality is fairly simple, it's designed to be a kind of "hello world" microservices system, or the first iteration of a more ambitious system. Only one of the services - users - has a database, the others are stateless. The services communicate with each other over http. The whole system is accessed via a public REST api on the newsletter service which is documented with Swagger.
 
