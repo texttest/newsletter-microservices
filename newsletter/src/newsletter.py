@@ -15,6 +15,7 @@ if cpmock_server:
     }
 
 @app.get("/sayHello/<string:name>")
+@app.output({ "type": "string" }, content_type="text/html", status_code=200)
 @cross_origin()
 def say_hello(name):
     person = get_person(name)
@@ -34,7 +35,6 @@ def format_greeting(person):
     greeting_url = os.getenv("GREETING_URL", 'http://localhost:5002')
     url = greeting_url + '/formatGreeting'
     return _get(url, params=person)
-
 
 def _get(url, params=None):
     r = requests.get(url, params=params)

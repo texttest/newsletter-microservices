@@ -1,4 +1,5 @@
 <-CLI:GET /getPerson/Charles%20Darwin
 --HEA:Accept=*/*
-->SRV:200 {"name": "Charles Darwin", "title": "Dr.", "description": "On the origin of species"}
---HEA:Content-Type=text/html; charset=utf-8
+->SRV:200 {"description":"On the origin of species","name":"Charles Darwin","title":"Dr."}
+
+--HEA:Content-Type=application/json

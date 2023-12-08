@@ -1,9 +1,6 @@
- * Serving Flask app 'greeting' (lazy loading)
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
+ * Serving Flask app 'greeting'
  * Debug mode: off
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://127.0.0.1:63971
+ * Running on http://127.0.0.1:59449
 Press CTRL+C to quit
-127.0.0.1 - - [10/Dec/2022 14:13:59] "GET /formatGreeting?name=Geoff HTTP/1.1" 200 -
+127.0.0.1 - - [07/Dec/2023 15:03:35] "GET /formatGreeting?name=Geoff HTTP/1.1" 200 -

@@ -1,9 +1,6 @@
- * Serving Flask app 'newsletter' (lazy loading)
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
+ * Serving Flask app 'newsletter'
  * Debug mode: off
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://127.0.0.1:64683
+ * Running on http://127.0.0.1:57196
 Press CTRL+C to quit
-127.0.0.1 - - [10/Dec/2022 14:25:50] "GET /sayHello/Charles%20Darwin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Dec/2023 11:42:08] "GET /sayHello/Charles%20Darwin HTTP/1.1" 200 -

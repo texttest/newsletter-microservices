@@ -1,4 +1,5 @@
 <-CLI:GET /getPerson/Geoff
 --HEA:Accept=*/*
-->SRV:200 {"name": "Geoff", "title": null, "description": null}
---HEA:Content-Type=text/html; charset=utf-8
+->SRV:200 {"description":null,"name":"Geoff","title":null}
+
+--HEA:Content-Type=application/json
