@@ -1,9 +1,10 @@
 
-import os, json
+import os, json, yaml
 import requests
 
 from flask_cors import CORS, cross_origin
-from apiflask import APIFlask, abort
+from apiflask import APIFlask, abort, Schema
+from apiflask.fields import String
 
 app = APIFlask('newsletter', title='Newsletter Service')
 CORS(app)
@@ -14,7 +15,11 @@ if cpmock_server:
         'requestInterceptor': interceptor
     }
 
+class Message(Schema):
+    message = String()
+
 @app.get("/sayHello/<string:name>")
+@app.output(Message)
 @cross_origin()
 def say_hello(name):
     person = get_person(name)
@@ -33,8 +38,8 @@ def get_person(name):
 def format_greeting(person):
     greeting_url = os.getenv("GREETING_URL", 'http://localhost:5002')
     url = greeting_url + '/formatGreeting'
-    return _get(url, params=person)
-
+    res = _get(url, params=person)
+    return json.loads(res)
 
 def _get(url, params=None):
     r = requests.get(url, params=params)
@@ -46,4 +51,7 @@ def _get(url, params=None):
 
 if __name__ == "__main__":
     port = 0 if "DYNAMIC_PORTS" in os.environ else 5010
+    with open(os.path.join(os.path.dirname(__file__), "openapi.yaml"), "w") as f:
+        yaml.dump(app.spec, f)
     app.run(port=port)
+    
