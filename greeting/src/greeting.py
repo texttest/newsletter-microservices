@@ -10,13 +10,17 @@ class PersonData(Schema):
     name = String(required=True)
     title = String()
     description = String()
+    
+class Message(Schema):
+    message = String()
 
 @app.get("/formatGreeting")
 @app.input(PersonData, "query")
-def format_greeting(query):
-    name = query.get('name')
-    title = query.get('title')
-    description = query.get('description')
+@app.output(Message)
+def format_greeting(query_data):
+    name = query_data.get('name')
+    title = query_data.get('title')
+    description = query_data.get('description')
         
     greeting = 'Hello'
     greeting += ', '
@@ -25,7 +29,7 @@ def format_greeting(query):
     greeting += name + '!'
     if description:
         greeting += ' ' + description + " is my favourite!"
-    return greeting
+    return { "message": greeting }
 
 if __name__ == "__main__":
     port = 0 if "DYNAMIC_PORTS" in os.environ else 5002
