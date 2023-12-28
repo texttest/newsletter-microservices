@@ -27,6 +27,12 @@ paths:
               schema:
                 type: string
           description: Successful response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
         '404':
           content:
             application/json:
