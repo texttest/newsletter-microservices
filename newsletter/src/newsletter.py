@@ -4,6 +4,7 @@ import requests
 
 from flask_cors import CORS, cross_origin
 from apiflask import APIFlask, abort
+import yaml
 
 app = APIFlask('newsletter', title='Newsletter Service')
 CORS(app)
@@ -15,7 +16,6 @@ if cpmock_server:
     }
 
 @app.get("/sayHello/<string:name>")
-@app.output({ "type": "string" }, content_type="text/html", status_code=200)
 @cross_origin()
 def say_hello(name):
     person = get_person(name)
@@ -46,4 +46,8 @@ def _get(url, params=None):
 
 if __name__ == "__main__":
     port = 0 if "DYNAMIC_PORTS" in os.environ else 5010
+    if "DUMP_SCHEMA" in os.environ:
+        print("Writing schema file")
+        with open(os.path.join(os.path.dirname(__file__), "openapi.yaml"), "w") as f:
+            yaml.dump(app.spec, f)
     app.run(port=port)
