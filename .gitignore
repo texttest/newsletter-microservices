@@ -5,3 +5,4 @@ texttest/html2ascii
 venv
 .project
 .pydevproject
+build/*
