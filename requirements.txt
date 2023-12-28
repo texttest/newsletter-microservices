@@ -8,3 +8,4 @@ requests
 dbtext
 capturemock
 pyodbc
+PyYAML
