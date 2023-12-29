@@ -35,6 +35,6 @@ if __name__ == "__main__":
     port = 0 if "DYNAMIC_PORTS" in os.environ else 5001
     if "DUMP_SCHEMA" in os.environ:
         print("Writing schema file")
-        with open(os.path.join(os.path.dirname(__file__), "openapi.yaml"), "w") as f:
+        with open(os.path.join(os.path.dirname(__file__), "users-openapi.yaml"), "w") as f:
             yaml.dump(app.spec, f)
     app.run(port=port)
