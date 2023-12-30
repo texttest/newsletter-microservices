@@ -1,0 +1,14 @@
+{
+    "sources": [
+        {
+            "provider": "git",
+            "test": [
+                "../contracts/newsletter-openapi.yaml"
+            ],
+            "stub": [
+                "../contracts/greeting-openapi.yaml",
+                "../contracts/users-openapi.yaml"
+            ]
+        }
+    ]
+}

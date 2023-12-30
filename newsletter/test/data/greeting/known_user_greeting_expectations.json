@@ -1,0 +1,18 @@
+{
+  "http-request": {
+      "path": "/formatGreeting",
+      "method": "GET",
+      "query": {
+          "title": "Miss.",
+          "name": "EmilyBache",
+          "description": "Independent Technical Coach, YouTuber, creator of Samman Coaching, Author"
+      }
+  },
+  "http-response": {
+      "status": 200,
+      "body": "Hello, Miss. EmilyBache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person.",
+      "headers": {
+          "Content-Type": "text/html"
+      }
+  }
+}

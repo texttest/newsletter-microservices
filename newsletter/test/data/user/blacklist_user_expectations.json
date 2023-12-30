@@ -1,0 +1,13 @@
+{
+    "http-request": {
+        "path": "/getPerson/DDT",
+        "method": "GET"
+    },
+    "http-response": {
+        "status": 400,
+        "body": {
+            "detail": { "error": "Invalid input" },
+            "message": "DDTs are not kind to bees."
+        }
+    }
+}

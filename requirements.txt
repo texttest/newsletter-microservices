@@ -9,3 +9,5 @@ dbtext
 capturemock
 pyodbc
 PyYAML
+pytest==7.3.1
+specmatic==0.22.0

@@ -20,24 +20,35 @@ paths:
         required: true
         schema:
           type: string
+        examples:
+          SUCCESS:
+            value: "EmilyBache"
+          BLACKLISTED:
+            value: "DDT"
+          Unknown:
+            value: "Unknown"
       responses:
         '200':
           content:
             text/html:
               schema:
                 type: string
+              examples:
+                SUCCESS:
+                  value: "Hello, Miss. EmilyBache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person."
+                Unknown:
+                  value: "Hello, Unknown."
           description: Successful response
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
-          description: Not found
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPError'
-          description: Not found
+              examples:
+                BLACKLISTED:
+                  value:
+                    detail: { "error": "Blacklisted name" }
+                    message: "Bad request"
+          description: Bad request
       summary: Say Hello
 tags: []
