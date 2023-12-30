@@ -4,7 +4,6 @@ components:
       properties:
         detail:
           type: object
-          additionalProperties: true
         message:
           type: string
       type: object
