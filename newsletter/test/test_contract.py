@@ -21,7 +21,7 @@ class TestContract:
 
 Specmatic() \
     .with_project_root(ROOT_DIR) \
-    .with_stub(stub_host, stub_port, args=["--data="+folder_with_stub_expectation_jsons]) \
+    .with_stub(stub_host, stub_port) \
     .with_wsgi_app(app, app_host, app_port) \
     .test(TestContract) \
     .run()
