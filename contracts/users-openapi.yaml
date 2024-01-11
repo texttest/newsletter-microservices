@@ -40,7 +40,9 @@ paths:
           type: string
         examples:
           SUCCESS:
-            value: "EmilyBache"
+            value: "Emily Bache"
+          UNKNOWN:
+            value: "Unknown"
           BLACKLISTED:
             value: "DDT"
       responses:
@@ -53,8 +55,13 @@ paths:
                 SUCCESS:
                   value:
                     description: "Independent Technical Coach, YouTuber, creator of Samman Coaching, Author"
-                    name: "EmilyBache"
+                    name: "Emily Bache"
                     title: "Miss."
+                UNKNOWN:
+                  value:
+                    description: null
+                    name: "Unknown"
+                    title: null
           description: Successful response
         '400':
           content:

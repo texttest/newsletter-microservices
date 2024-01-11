@@ -22,10 +22,10 @@ paths:
           type: string
         examples:
           SUCCESS:
-            value: "EmilyBache"
+            value: "Emily Bache"
           BLACKLISTED:
             value: "DDT"
-          Unknown:
+          UNKNOWN:
             value: "Unknown"
       responses:
         '200':
@@ -35,8 +35,8 @@ paths:
                 type: string
               examples:
                 SUCCESS:
-                  value: "Hello, Miss. EmilyBache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person."
-                Unknown:
+                  value: "Hello, Miss. Emily Bache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person."
+                UNKNOWN:
                   value: "Hello, Unknown."
           description: Successful response
         '400':
