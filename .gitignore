@@ -5,4 +5,7 @@ texttest/html2ascii
 venv
 .project
 .pydevproject
-build/*
+**/build/*
+.vscode/*
+**/.pytest_cache/*
+**/.specmatic/*

@@ -7,6 +7,9 @@ components:
         message:
           type: string
       type: object
+      example:
+        detail: { "error": "Invalid input" }
+        message: "Bad request"
     PersonOut:
       properties:
         description:
@@ -18,6 +21,10 @@ components:
           nullable: true
           type: string
       type: object
+      example:
+        description: "Software Engineer"
+        name: "John Doe"
+        title: "Mr."
 info:
   title: Users Service
   version: 0.1.0
@@ -31,18 +38,41 @@ paths:
         required: true
         schema:
           type: string
+        examples:
+          SUCCESS:
+            value: "Emily Bache"
+          UNKNOWN:
+            value: "Unknown"
+          BLACKLISTED:
+            value: "DDT"
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonOut'
+              examples:
+                SUCCESS:
+                  value:
+                    description: "Independent Technical Coach, YouTuber, creator of Samman Coaching, Author"
+                    name: "Emily Bache"
+                    title: "Miss."
+                UNKNOWN:
+                  value:
+                    description: null
+                    name: "Unknown"
+                    title: null
           description: Successful response
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
+              examples:
+                BLACKLISTED:
+                  value:
+                    detail: { "error": "Invalid input" }
+                    message: "DDTs are not kind to bees."
           description: Bad Input
         '404':
           content:
