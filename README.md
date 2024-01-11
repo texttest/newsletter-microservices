@@ -70,3 +70,12 @@ For each service, (users, newsletter and greeting), here referred to as $SERVICE
 
 When they are all running, you should be able to open a browser on the [Newsletter swagger api](http://localhost:5010/docs) to access the functionality.
 
+## Contract Testing with Specmatic
+To run the contract tests for newsletter service:
+
+    virtualenv -p /usr/bin/python3 venv
+    source venv/bin/activate
+    cd newsletter
+    pytest test -v -s
+
+In specmatic.json under newsletter folder, you will notice that we've specified the path to newsletter service's OpenAPI spec under the test section. Similarlly we've specified, user and greeting service's OpenAPI spec path under stub section. This ensures that specmatic creates a stub for both those service dependencies using their OpenAPI specifications.

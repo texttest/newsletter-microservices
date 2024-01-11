@@ -1,0 +1,97 @@
+components:
+  schemas:
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+      example:
+        detail: { "error": "Invalid input" }
+        message: "Bad request"
+    PersonOut:
+      properties:
+        description:
+          nullable: true
+          type: string
+        name:
+          type: string
+        title:
+          nullable: true
+          type: string
+        first_time_user:
+          type: boolean
+      type: object
+info:
+  title: Users Service
+  version: 0.1.0
+openapi: 3.0.3
+paths:
+  /persons:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - "name"
+              properties:
+                name:
+                  type: string
+                title:
+                  nullable: true
+                  type: string
+                description:
+                  nullable: true
+                  type: string
+            examples:
+              SUCCESS:
+                value:
+                  name: "Emily Bache"
+              UNKNOWN:
+                value:
+                  name: "Unknown"
+              BLACKLISTED:
+                value:
+                  name: "DDT"
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonOut'
+              examples:
+                SUCCESS:
+                  value:
+                    description: "Independent Technical Coach, YouTuber, creator of Samman Coaching, Author"
+                    name: "Emily Bache"
+                    title: "Miss."
+                    first_time_user: false
+                UNKNOWN:
+                  value:
+                    name: "Unknown"
+                    first_time_user: true
+                    description: ""
+                    title: ""
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+              examples:
+                BLACKLISTED:
+                  value:
+                    detail: { "error": "Invalid input" }
+                    message: "DDTs are not kind to bees."
+          description: Bad Input
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      summary: Get Person Http
+tags: []
