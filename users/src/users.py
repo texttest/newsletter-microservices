@@ -11,23 +11,34 @@ class PersonOut(Schema):
     name = String()
     title = String(allow_none=True)
     description = String(allow_none=True)
+    first_time_user = bool()
 
-@app.get("/getPerson/<string:name>")
+class PersonIn(Schema):
+    name = String()
+    title = String(allow_none=True)
+    description = String(allow_none=True)
+
+@app.post("/persons")
 @app.output(PersonOut)
-def get_person_http(name):
+@app.input(PersonIn)
+def get_person_http(json_data):
+    name = json_data.get('name')
+    first_time_user = False
     person = Person.get(name)
     if person is None:
         if name in ["Neonicotinoid", "Insecticide", "DDT"]:
             abort(400, f"{name}s are not kind to bees.")
         person = Person()
         person.name = name
-        person.save()
-    else:
-        person.description
+        person.title = json_data.get('title')
+        person.description = json_data.get('description')
+        person.save() 
+        first_time_user = True   
     response = {
         'name': person.name,
         'title': person.title,
         'description': person.description,
+        'first_time_user': first_time_user
     }
     return response
 

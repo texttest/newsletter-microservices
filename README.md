@@ -73,6 +73,8 @@ When they are all running, you should be able to open a browser on the [Newslett
 ## Contract Testing with Specmatic
 To run the contract tests for newsletter service:
 
+    virtualenv -p /usr/bin/python3 venv
+    source venv/bin/activate
     cd newsletter
     pytest test -v -s
 

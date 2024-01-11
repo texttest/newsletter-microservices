@@ -31,6 +31,8 @@ paths:
           examples:
             SUCCESS:
               value: Independent Technical Coach, YouTuber, creator of Samman Coaching, Author
+            UNKNOWN:
+              value: ""
         - in: query
           name: name
           required: true
@@ -38,7 +40,9 @@ paths:
             type: string
           examples:
             SUCCESS:
-              value: EmilyBache
+              value: Emily Bache
+            UNKNOWN:
+              value: Unknown
         - in: query
           name: title
           required: false
@@ -47,6 +51,18 @@ paths:
           examples:
             SUCCESS:
               value: Miss.
+            UNKNOWN:
+              value: ""
+        - in: query
+          name: first_time_user
+          required: false
+          schema:
+            type: boolean
+          examples:
+            SUCCESS:
+              value: false
+            UNKNOWN:
+              value: true
       responses:
         '200':
           content:
@@ -55,7 +71,9 @@ paths:
                 type: string
               examples:
                 SUCCESS:
-                  value: Hello, Miss. EmilyBache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person.
+                  value: Hello, Miss. Emily Bache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person. Welcome back!
+                UNKNOWN:
+                  value: Hello, Unknown. Nice to meet you!
           description: Successful response
         '400':
           content:

@@ -13,6 +13,7 @@ stub_url = 'http://' + stub_host + ':' + str(stub_port)
 
 os.environ['USERS_URL'] = stub_url
 os.environ['GREETING_URL'] = stub_url
+os.environ['SPECMATIC_GENERATIVE_TESTS'] = "true"
 
 folder_with_stub_expectation_jsons = ROOT_DIR + '/test/data'
 
@@ -23,7 +24,7 @@ Specmatic() \
     .with_project_root(ROOT_DIR) \
     .with_stub(stub_host, stub_port) \
     .with_wsgi_app(app, app_host, app_port) \
-    .test(TestContract) \
+    .test_with_api_coverage_for_flask_app(TestContract, app) \
     .run()
 
 if __name__ == '__main__':
