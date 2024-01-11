@@ -34,9 +34,6 @@ paths:
               BLACKLISTED:
                 value:
                   name: "DDT"
-              UNPROCESSABLE:
-                value:
-                  name: 123
       responses:
         '200':
           content:
@@ -65,11 +62,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
-              examples:
-                UNPROCESSABLE:
-                  value:
-                    detail: { "json": { name: ["Not a valid string."] } }
-                    message: "Validation error"
           description: Unprocessable entity
       summary: Say Hello
 tags: []
