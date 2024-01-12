@@ -1,0 +1,19 @@
+{
+    "name": "blacklisted_user",
+    "http-request": {
+        "path": "/sayHello",
+        "method": "POST",
+        "body": {
+            "name": "DDT"
+        }
+    },
+    "http-response": {
+        "status": 400,
+        "body": {
+            "detail": {
+                "error": "Blacklisted name"
+            },
+            "message": "Bad request"
+        }
+    }
+}

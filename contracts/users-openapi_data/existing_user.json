@@ -1,0 +1,18 @@
+{
+    "http-request": {
+        "path": "/persons",
+        "method": "POST",
+        "body": {
+            "name": "Emily Bache"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "description": "Independent Technical Coach, YouTuber, creator of Samman Coaching, Author",
+            "name": "Emily Bache",
+            "title": "Miss.",
+            "first_time_user": false
+        }
+    }
+}

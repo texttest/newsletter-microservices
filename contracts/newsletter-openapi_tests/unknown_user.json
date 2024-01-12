@@ -1,0 +1,14 @@
+{
+    "name": "unknown_user",
+    "http-request": {
+        "path": "/sayHello",
+        "method": "POST",
+        "body": {
+            "name": "Unknown"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": "Hello, Unknown. Nice to meet you!"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "name": "existing_user",
+    "http-request": {
+        "path": "/sayHello",
+        "method": "POST",
+        "body": {
+            "name": "Emily Bache"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": "Hello, Miss. Emily Bache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person. Welcome back!"
+    }
+}

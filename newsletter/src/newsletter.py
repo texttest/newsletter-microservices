@@ -3,7 +3,9 @@ import os, json
 import requests
 
 from flask_cors import CORS, cross_origin
-from apiflask import APIFlask, abort
+from apiflask import APIFlask, abort, Schema
+from apiflask.fields import String
+import yaml
 
 app = APIFlask('newsletter', title='Newsletter Service')
 CORS(app)
@@ -14,27 +16,39 @@ if cpmock_server:
         'requestInterceptor': interceptor
     }
 
-@app.get("/sayHello/<string:name>")
-@app.output({ "type": "string" }, content_type="text/html", status_code=200)
+
+class PersonIn(Schema):
+    name = String()
+
+
+@app.post("/sayHello")
+@app.input(PersonIn)
 @cross_origin()
-def say_hello(name):
-    person = get_person(name)
-    resp = format_greeting(person)
-    return resp
+def say_hello(json_data):
+    name = json_data.get('name')
+    person = fetch_or_create_person(name)
+    return format_greeting(person)
 
 
-def get_person(name):
+def fetch_or_create_person(name):
     users_url = os.getenv("USERS_URL", 'http://localhost:5001')
-    url = f'{users_url}/getPerson/{name}'
-    res = _get(url)
-    person = json.loads(res)
-    return person
+    url = f'{users_url}/persons'
+    return _post(url, person={'name': name})
 
 
 def format_greeting(person):
     greeting_url = os.getenv("GREETING_URL", 'http://localhost:5002')
     url = greeting_url + '/formatGreeting'
     return _get(url, params=person)
+
+
+def _post(url, person):
+    r = requests.post(url, json=person)
+    data = json.loads(r.text)
+    if r.status_code != 200:
+        abort(r.status_code, data['message'])
+    return data
+
 
 def _get(url, params=None):
     r = requests.get(url, params=params)
@@ -46,4 +60,8 @@ def _get(url, params=None):
 
 if __name__ == "__main__":
     port = 0 if "DYNAMIC_PORTS" in os.environ else 5010
+    if "DUMP_SCHEMA" in os.environ:
+        print("Writing schema file")
+        with open(os.path.join(os.path.dirname(__file__), "newsletter-openapi.yaml"), "w") as f:
+            yaml.dump(app.spec, f)
     app.run(port=port)
