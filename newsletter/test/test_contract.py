@@ -14,6 +14,7 @@ stub_url = 'http://' + stub_host + ':' + str(stub_port)
 os.environ['USERS_URL'] = stub_url
 os.environ['GREETING_URL'] = stub_url
 os.environ['SPECMATIC_GENERATIVE_TESTS'] = "true"
+os.environ['SPECMATIC_TEST_PARALLELISM'] = "3"
 
 folder_with_stub_expectation_jsons = ROOT_DIR + '/test/data'
 

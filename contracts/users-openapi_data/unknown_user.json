@@ -1,0 +1,18 @@
+{
+    "http-request": {
+        "path": "/persons",
+        "method": "POST",
+        "body": {
+            "name": "Unknown"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "name": "Unknown",
+            "first_time_user": true,
+            "description": "",
+            "title": ""
+        }
+    }
+}

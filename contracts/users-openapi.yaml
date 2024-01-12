@@ -46,46 +46,18 @@ paths:
                 description:
                   nullable: true
                   type: string
-            examples:
-              SUCCESS:
-                value:
-                  name: "Emily Bache"
-              UNKNOWN:
-                value:
-                  name: "Unknown"
-              BLACKLISTED:
-                value:
-                  name: "DDT"
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonOut'
-              examples:
-                SUCCESS:
-                  value:
-                    description: "Independent Technical Coach, YouTuber, creator of Samman Coaching, Author"
-                    name: "Emily Bache"
-                    title: "Miss."
-                    first_time_user: false
-                UNKNOWN:
-                  value:
-                    name: "Unknown"
-                    first_time_user: true
-                    description: ""
-                    title: ""
           description: Successful response
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
-              examples:
-                BLACKLISTED:
-                  value:
-                    detail: { "error": "Invalid input" }
-                    message: "DDTs are not kind to bees."
           description: Bad Input
         '404':
           content:

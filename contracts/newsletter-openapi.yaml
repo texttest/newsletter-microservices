@@ -24,38 +24,18 @@ paths:
               properties:
                 name:
                   type: string
-            examples:
-              SUCCESS:
-                value:
-                  name: "Emily Bache"
-              UNKNOWN:
-                value:
-                  name: "Unknown"
-              BLACKLISTED:
-                value:
-                  name: "DDT"
       responses:
         '200':
           content:
             text/html:
               schema:
                 type: string
-              examples:
-                SUCCESS:
-                  value: "Hello, Miss. Emily Bache. Independent Technical Coach, YouTuber, creator of Samman Coaching, Author is my favourite person. Welcome back!"
-                UNKNOWN:
-                  value: "Hello, Unknown. Nice to meet you!"
           description: Successful response
         '400':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
-              examples:
-                BLACKLISTED:
-                  value:
-                    detail: { "error": "Blacklisted name" }
-                    message: "Bad request"
           description: Bad request
         '422':
           content:

@@ -1,0 +1,16 @@
+{
+    "http-request": {
+        "path": "/formatGreeting",
+        "method": "GET",
+        "query": {
+            "first_time_user": true,
+            "title": "",
+            "name": "Unknown",
+            "description": ""
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": "Hello, Unknown. Nice to meet you!"
+    }
+}
